@@ -9,6 +9,35 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RadioTest {
 
+    @Test
+    void defaultValues() {
+        Radio radio = new Radio();
+        assertEquals(10, radio.getQuantityStation());
+        assertEquals(0, radio.getMinStation());
+        assertEquals(9, radio.getMaxStation());
+        assertEquals(0, radio.getCurrentStation());
+        assertEquals(0, radio.getMinVolume());
+        assertEquals(100, radio.getMaxVolume());
+        assertEquals(0, radio.getCurrentVolume());
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "valid value, 100, 100, 0, 99, 0",
+                    "border condition value, 1, 1, 0, 0, 0",
+                    "border condition value, 0, 10, 0, 9, 0",
+                    "border condition value, -1, 10, 0, 9, 0"
+            }
+    )
+    void setQuantityStation(String test, int setQuantityStation, int quantityStationExp, int minStationExp, int maxStationExp, int currentStationExp) {
+        Radio radio = new Radio(setQuantityStation);
+
+        assertEquals(quantityStationExp, radio.getQuantityStation());
+        assertEquals(minStationExp, radio.getMinStation());
+        assertEquals(maxStationExp, radio.getMaxStation());
+        assertEquals(currentStationExp, radio.getCurrentStation());
+    }
 
     @ParameterizedTest
     @CsvSource(
@@ -32,6 +61,7 @@ public class RadioTest {
 
         assertEquals(expected, actual);
     }
+
     @ParameterizedTest
     @CsvSource(
             value = {
@@ -46,8 +76,28 @@ public class RadioTest {
                     "not valid big value, 150, 0"
             }
     )
-    void setStationWithQuantityStation(String test, int setStation, int expected) {
+    void setStationWithBigQuantityStation(String test, int setStation, int expected) {
         Radio station = new Radio(100);
+        station.setCurrentStation(setStation);
+
+        int actual = station.getCurrentStation();
+
+        assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "border condition, 1, 0",
+                    "border condition, 0, 0",
+                    "border condition, -1, 0",
+                    "border condition, 2, 0",
+                    "not valid big minus, -100, 0",
+                    "not valid big value, 150, 0"
+            }
+    )
+    void setStationWithBorderQuantityStationOne(String test, int setStation, int expected) {
+        Radio station = new Radio(1);
         station.setCurrentStation(setStation);
 
         int actual = station.getCurrentStation();
@@ -69,8 +119,8 @@ public class RadioTest {
                     "not valid big value, 50, 0"
             }
     )
-    void setStationWithMinusQuantityStation(String test, int setStation, int expected) {
-        Radio station = new Radio(-100);
+    void setStationWithBorderQuantityStationMinusOne(String test, int setStation, int expected) {
+        Radio station = new Radio(-1);
         station.setCurrentStation(setStation);
 
         int actual = station.getCurrentStation();
@@ -104,6 +154,52 @@ public class RadioTest {
     @ParameterizedTest
     @CsvSource(
             value = {
+                    "valid value, 5, 5",
+                    "border condition, 1, 1",
+                    "border condition, 0, 0",
+                    "border condition, -1, 0",
+                    "border condition, 8, 8",
+                    "border condition, 9, 9",
+                    "border condition, 10, 0",
+                    "minus, -10, 0",
+                    "not valid big value, 50, 0"
+            }
+    )
+    void setStationWithQuantityStationMinusOne(String test, int setStation, int expected) {
+        Radio station = new Radio(-1);
+        station.setCurrentStation(setStation);
+
+        int actual = station.getCurrentStation();
+
+        assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "valid value, 5, 5",
+                    "border condition, 1, 1",
+                    "border condition, 0, 0",
+                    "border condition, -1, 0",
+                    "border condition, 8, 8",
+                    "border condition, 9, 9",
+                    "border condition, 10, 0",
+                    "minus, -10, 0",
+                    "not valid big value, 50, 0"
+            }
+    )
+    void setStationWithBigMinusQuantityStation(String test, int setStation, int expected) {
+        Radio station = new Radio(-100);
+        station.setCurrentStation(setStation);
+
+        int actual = station.getCurrentStation();
+
+        assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            value = {
                     "valid value, 5, 6",
                     "border condition, 9, 0",
                     "border condition, 0, 1",
@@ -122,6 +218,7 @@ public class RadioTest {
 
         assertEquals(expected, actual);
     }
+
     @ParameterizedTest
     @CsvSource(
             value = {
@@ -132,8 +229,74 @@ public class RadioTest {
                     "border condition, 100, 1"
             }
     )
-    void shouldToNextStationWithQuantityStation(String test, int setStation, int expected) {
+    void shouldToNextStationWithBigQuantityStation(String test, int setStation, int expected) {
         Radio station = new Radio(100);
+
+        station.setCurrentStation(setStation);
+
+        station.nextStationSwitch();
+
+        int actual = station.getCurrentStation();
+
+        assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "border condition, 1, 0",
+                    "border condition, 0, 0",
+                    "border condition, -1, 0",
+                    "not valid big value, 100, 0",
+                    "not valid minus big value, -100, 0"
+            }
+    )
+    void shouldToNextStationWithQuantityStationOne(String test, int setStation, int expected) {
+        Radio station = new Radio(1);
+
+        station.setCurrentStation(setStation);
+
+        station.nextStationSwitch();
+
+        int actual = station.getCurrentStation();
+
+        assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "valid value, 5, 6",
+                    "border condition, 9, 0",
+                    "border condition, 0, 1",
+                    "border condition, -1, 1",
+                    "border condition, 10, 1"
+            }
+    )
+    void shouldToNextStationWithQuantityStationZero(String test, int setStation, int expected) {
+        Radio station = new Radio(0);
+
+        station.setCurrentStation(setStation);
+
+        station.nextStationSwitch();
+
+        int actual = station.getCurrentStation();
+
+        assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "valid value, 5, 6",
+                    "border condition, 9, 0",
+                    "border condition, 0, 1",
+                    "border condition, -1, 1",
+                    "border condition, 10, 1"
+            }
+    )
+    void shouldToNextStationWithQuantityStationMinusOne(String test, int setStation, int expected) {
+        Radio station = new Radio(-1);
 
         station.setCurrentStation(setStation);
 
@@ -178,8 +341,77 @@ public class RadioTest {
                     "border condition, 100, 99"
             }
     )
-    void shouldToPrevStationWithQuantityStation(String test, int setStation, int expected) {
+    void shouldToPrevStationWithBigQuantityStation(String test, int setStation, int expected) {
         Radio station = new Radio(100);
+
+        station.setCurrentStation(setStation);
+
+        station.prevStationSwitch();
+
+        int actual = station.getCurrentStation();
+
+        assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "valid value, 0, 0",
+                    "border condition, 1, 0",
+                    "border condition, -1, 0",
+                    "border condition, 2, 0",
+                    "not valid big minus value, -100, 0",
+                    "not valid big value, 100, 0"
+            }
+    )
+    void shouldToPrevStationWithQuantityStationOne(String test, int setStation, int expected) {
+        Radio station = new Radio(1);
+
+        station.setCurrentStation(setStation);
+
+        station.prevStationSwitch();
+
+        int actual = station.getCurrentStation();
+
+        assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "valid value, 6, 5",
+                    "border condition, 0, 9",
+                    "border condition, 9, 8",
+                    "border condition, 1, 0",
+                    "border condition, -1, 9",
+                    "border condition, 10, 9"
+            }
+    )
+    void shouldToPrevStationWithQuantityStationMinusOne(String test, int setStation, int expected) {
+        Radio station = new Radio(-1);
+
+        station.setCurrentStation(setStation);
+
+        station.prevStationSwitch();
+
+        int actual = station.getCurrentStation();
+
+        assertEquals(expected, actual);
+    }
+
+    @ParameterizedTest
+    @CsvSource(
+            value = {
+                    "valid value, 6, 5",
+                    "border condition, 0, 9",
+                    "border condition, 9, 8",
+                    "border condition, 1, 0",
+                    "border condition, -1, 9",
+                    "border condition, 10, 9"
+            }
+    )
+    void shouldToPrevStationWithQuantityStationZero(String test, int setStation, int expected) {
+        Radio station = new Radio(0);
 
         station.setCurrentStation(setStation);
 

@@ -10,6 +10,27 @@ public class Radio {
     private int maxVolume = 100;
     private int currentVolume = minVolume;
 
+
+    public int getQuantityStation() {
+        return quantityStation;
+    }
+
+    public int getMinStation() {
+        return minStation;
+    }
+
+    public int getMaxStation() {
+        return maxStation;
+    }
+
+    public int getMinVolume() {
+        return minVolume;
+    }
+
+    public int getMaxVolume() {
+        return maxVolume;
+    }
+
     public Radio(int quantityStation) {
         if (quantityStation <= 0) {
             return;
@@ -31,6 +52,7 @@ public class Radio {
         }
         this.currentStation = currentStation;
     }
+
 
     public int getCurrentStation() {
         return currentStation;
